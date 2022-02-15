@@ -6,11 +6,15 @@
 #    By: mlagrang <mlagrang@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/14 10:08:47 by mlagrang          #+#    #+#              #
-#    Updated: 2022/02/14 16:22:50 by mlagrang         ###   ########.fr        #
+#    Updated: 2022/02/15 12:11:58 by mlagrang         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS	=	main.c
+SRCS	=	srcs/secure.c	\
+			srcs/lib.c		\
+			srcs/init.c		\
+			srcs/thread.c	\
+			main.c
 
 HEADERS	=	Philo.h
 
