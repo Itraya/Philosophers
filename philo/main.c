@@ -6,7 +6,7 @@
 /*   By: mlagrang <mlagrang@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 10:05:22 by mlagrang          #+#    #+#             */
-/*   Updated: 2022/02/15 11:12:17 by mlagrang         ###   ########.fr       */
+/*   Updated: 2022/03/29 11:33:08 by mlagrang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,28 @@ void	ft_msleep(int ms)
 	while (i < time + ms)
 	{
 		i = get_time();
-		usleep(10);
+		usleep(100);
 	}
+}
+
+t_philo	*ft_free(t_philo *philo, t_gphilos *gb, int nb)
+{
+	int	i;
+
+	i = 0;
+	while (i < nb)
+	{
+		pthread_mutex_destroy(&philo[i].forkr);
+		pthread_mutex_destroy(&philo[i].statusm);
+		pthread_mutex_destroy(&philo[i].ttodiem);
+		i++;
+	}
+	pthread_mutex_destroy(&gb->nbpleinm);
+	pthread_mutex_destroy(&gb->deathm);
+	pthread_mutex_destroy(&gb->printm);
+	pthread_mutex_destroy(&gb->startm);
+	free(philo);
+	return (0);
 }
 
 int	main(int ac, char **av)
@@ -43,18 +63,22 @@ int	main(int ac, char **av)
 	if (ac < 5 || ac > 6 || !ft_isnb(av))
 		return (0 * printf("Mauvais arguments\n"));
 	philo = ft_init(av, &gb);
-	ft_whilemain(philo);
-	ft_death(&gb);
-	if (gb.nbplein != philo[0].gnbphilo)
-		printf("%lld %d died\n", get_time() - philo->gl->start, philo->id);
-	i = 0;
-	while (i < philo[i].gnbphilo - 1)
+	if (philo)
 	{
-		pthread_mutex_lock(&philo[i].statusm);
-		if (philo[i].status == 0)
-			i++;
-		pthread_mutex_unlock(&philo[i].statusm);
+		i = ft_whilemain(philo);
+		ft_death(&gb);
+		if (gb.nbplein != philo[0].gnbphilo)
+			ft_print(&philo[i], "died");
+		i = 0;
+		while (i < philo[i].gnbphilo - 1)
+		{
+			pthread_mutex_lock(&philo[i].statusm);
+			if (philo[i].status == 0)
+				i++;
+			pthread_mutex_unlock(&philo[i].statusm);
+		}
 	}
 	usleep(100000);
-	free(philo);
+	if (philo)
+		ft_free(philo, &gb, philo[0].gnbphilo);
 }

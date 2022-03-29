@@ -6,7 +6,7 @@
 #    By: mlagrang <mlagrang@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/14 10:08:47 by mlagrang          #+#    #+#              #
-#    Updated: 2022/02/15 12:11:58 by mlagrang         ###   ########.fr        #
+#    Updated: 2022/03/29 11:44:02 by mlagrang         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ NAME	= philo
 
 CC		= gcc
 
-CFLAGS	= -Wall -Wextra -Werror #-g -fsanitize=thread -o1
+CFLAGS	= -Wall -Wextra -Werror #-g -fsanitize=thread
 
 %.o:	%.c	${HEADERS} Makefile
 		${CC} ${CFLAGS} -c $< -o $@

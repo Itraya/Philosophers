@@ -6,7 +6,7 @@
 /*   By: mlagrang <mlagrang@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 10:05:54 by mlagrang          #+#    #+#             */
-/*   Updated: 2022/02/15 11:12:56 by mlagrang         ###   ########.fr       */
+/*   Updated: 2022/02/18 09:37:16 by mlagrang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ typedef struct s_philo
 
 void	ft_print(t_philo *philo, char *txt);
 void	ft_whilephi(t_philo *phi);
-void	ft_whilemain(t_philo *philo);
+int		ft_whilemain(t_philo *philo);
 int		ft_isnb(char **av);
 int		ft_atoi(char *a);
 t_philo	*ft_prep(char **av, t_gphilos *gb);
@@ -65,6 +65,7 @@ void	ft_think(t_philo *philo);
 t_philo	*ft_init(char **av, t_gphilos *gb);
 void	ft_death(t_gphilos *gb);
 void	*ft_philo(void *philo);
-void	ft_thread(t_philo *philo);
+int		ft_thread(t_philo *philo);
+t_philo	*ft_free(t_philo *philo, t_gphilos *gb, int nb);
 
 #endif

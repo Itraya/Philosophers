@@ -6,7 +6,7 @@
 /*   By: mlagrang <mlagrang@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 10:10:39 by mlagrang          #+#    #+#             */
-/*   Updated: 2022/02/15 12:12:14 by mlagrang         ###   ########.fr       */
+/*   Updated: 2022/03/29 11:53:59 by mlagrang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	ft_print(t_philo *philo, char *txt)
 {
 	pthread_mutex_lock(&philo->gl->printm);
-	if (philo->gl->print == 1)
+	if (philo->gl->print == 1 || txt[0] == 'd')
 		printf("%lld %d %s\n", get_time() - philo->gl->start, philo->id, txt);
 	pthread_mutex_unlock(&philo->gl->printm);
 }
@@ -39,7 +39,7 @@ void	ft_whilephi(t_philo *phi)
 	pthread_mutex_unlock(&phi->gl->deathm);
 }
 
-void	ft_whilemain(t_philo *philo)
+int	ft_whilemain(t_philo *philo)
 {
 	int	i;
 
@@ -47,17 +47,17 @@ void	ft_whilemain(t_philo *philo)
 	while (1)
 	{
 		pthread_mutex_lock(&philo[i].ttodiem);
-		if (philo[i].ttodie <= get_time())
+		if (philo[i].ttodie < get_time())
 		{
 			pthread_mutex_unlock(&philo[i].ttodiem);
-			break ;
+			return (i);
 		}
 		pthread_mutex_unlock(&philo[i].ttodiem);
 		pthread_mutex_lock(&philo[i].gl->nbpleinm);
 		if (philo[i].gl->nbplein == philo[i].gnbphilo)
 		{
 			pthread_mutex_unlock(&philo[i].gl->nbpleinm);
-			break ;
+			return (i);
 		}
 		pthread_mutex_unlock(&philo[i].gl->nbpleinm);
 		i++;

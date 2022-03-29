@@ -6,7 +6,7 @@
 /*   By: mlagrang <mlagrang@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 10:22:14 by mlagrang          #+#    #+#             */
-/*   Updated: 2022/02/15 12:12:09 by mlagrang         ###   ########.fr       */
+/*   Updated: 2022/02/17 15:16:13 by mlagrang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,11 @@ t_philo	*ft_init(char **av, t_gphilos *gb)
 	t_philo	*philo;
 
 	philo = ft_prep(av, gb);
+	if (!philo)
+		return (0);
 	pthread_mutex_lock(&gb->startm);
-	ft_thread(philo);
+	if (!ft_thread(philo))
+		return (ft_free(philo, philo->gl, philo->gnbphilo));
 	usleep(1000);
 	gb->start = get_time();
 	pthread_mutex_unlock(&gb->startm);

@@ -6,7 +6,7 @@
 /*   By: mlagrang <mlagrang@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 11:10:58 by mlagrang          #+#    #+#             */
-/*   Updated: 2022/02/15 12:12:17 by mlagrang         ###   ########.fr       */
+/*   Updated: 2022/03/29 11:49:06 by mlagrang         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,18 +34,28 @@ void	*ft_philo(void *philo)
 	return (philo);
 }
 
-void	ft_thread(t_philo *philo)
+int	ft_thread(t_philo *philo)
 {
 	int	i;
 
 	i = 0;
 	while (i < philo->gnbphilo)
 	{
-		if (pthread_create(&philo->thread, NULL, ft_philo, (void *)&philo[i]))
+		if (pthread_create(&philo[i].thread, NULL, ft_philo, (void *)&philo[i]))
+		{
 			printf("Error\n");
-		pthread_detach(philo->thread);
+			pthread_mutex_lock(&philo[i].gl->printm);
+			pthread_mutex_lock(&philo[i].gl->deathm);
+			philo[i].gl->death = 1;
+			philo[i].gl->print = 0;
+			pthread_mutex_unlock(&philo[i].gl->printm);
+			pthread_mutex_unlock(&philo[i].gl->deathm);
+			return (0);
+		}
+		pthread_detach(philo[i].thread);
 		i++;
 	}
+	return (1);
 }
 
 void	ft_eat(t_philo *philo)
@@ -57,13 +67,15 @@ void	ft_eat(t_philo *philo)
 	philo->nbeat++;
 	ft_print(philo, "is eating");
 	ft_msleep(philo->gttoeat);
+	if (philo->nbeat == philo->gnbtoeat)
+	{
+		pthread_mutex_lock(&philo->gl->nbpleinm);
+		philo->gl->nbplein++;
+		pthread_mutex_unlock(&philo->gl->nbpleinm);
+	}
 	pthread_mutex_lock(&philo->ttodiem);
 	philo->ttodie = get_time() + philo->gttodie;
 	pthread_mutex_unlock(&philo->ttodiem);
-	pthread_mutex_lock(&philo->gl->nbpleinm);
-	if (philo->nbeat == philo->gnbtoeat)
-		philo->gl->nbplein++;
-	pthread_mutex_unlock(&philo->gl->nbpleinm);
 	pthread_mutex_unlock(philo->forkl);
 	pthread_mutex_unlock(&philo->forkr);
 }
